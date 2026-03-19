@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horizon Voyages</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,300;1,700&family=Figtree:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bleu:        #0b3d6e;
+      --bleu-clair:  #1a6aad;
+      --ciel:        #4fa3d1;
+      --or:          #d4a843;
+      --or-clair:    #f0c96a;
+      --blanc:       #f8fbff;
+      --sable:       #fdf5e4;
+      --texte:       #0d2137;
+      --muted:       #6b8aaa;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--blanc);
+      color: var(--texte);
+      font-family: 'Figtree', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: var(--bleu);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1.5rem 8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cercles décoratifs */
+    .hero-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(79,163,209,0.15);
+      pointer-events: none;
+    }
+
+    .hero-circle:nth-child(1) { width: 600px; height: 600px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .hero-circle:nth-child(2) { width: 400px; height: 400px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .hero-circle:nth-child(3) { width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+    /* Étoiles décoratives */
+    .star {
+      position: absolute;
+      color: var(--or-clair);
+      font-size: 0.5rem;
+      opacity: 0.6;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .star:nth-child(4)  { top: 15%; left: 20%; animation-delay: 0s; }
+    .star:nth-child(5)  { top: 25%; left: 75%; animation-delay: 0.5s; }
+    .star:nth-child(6)  { top: 70%; left: 15%; animation-delay: 1s; }
+    .star:nth-child(7)  { top: 60%; left: 80%; animation-delay: 1.5s; }
+    .star:nth-child(8)  { top: 40%; left: 10%; animation-delay: 2s; }
+    .star:nth-child(9)  { top: 80%; left: 60%; animation-delay: 0.8s; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(212,168,67,0.15);
+      border: 1px solid rgba(212,168,67,0.3);
+      color: var(--or-clair);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 0.45rem 1.2rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(3rem, 11vw, 7rem);
+      font-weight: 700;
+      line-height: 0.95;
+      color: var(--blanc);
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-title span {
+      color: var(--or);
+      font-style: italic;
+      display: block;
+    }
+
+    .hero-tagline {
+      font-size: 0.9rem;
+      color: rgba(248,251,255,0.55);
+      margin-top: 1.5rem;
+      letter-spacing: 0.05em;
+      max-width: 320px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--or);
+      color: var(--bleu);
+      text-decoration: none;
+      padding: 0.9rem 2.2rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 2px;
+      margin-top: 2.5rem;
+      transition: background 0.3s, transform 0.2s;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .hero-cta:hover {
+      background: var(--or-clair);
+      transform: translateY(-2px);
+    }
+
+    /* Stats */
+    .hero-stats {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 1.4rem 2rem;
+      background: rgba(11,61,110,0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(79,163,209,0.15);
+      z-index: 1;
+      opacity: 0;
+      animation: fadeUp 1s 1s forwards;
+    }
+
+    .stat { text-align: center; }
+
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem;
+      color: var(--or);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(248,251,255,0.45);
+    }
+
+    /* ── DESTINATIONS ── */
+    .destinations {
+      padding: 5rem 1.5rem;
+      background: var(--sable);
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--ciel);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 300;
+      color: var(--bleu);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-desc {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 320px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .destinations-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .dest-card {
+      background: var(--blanc);
+      border: 1px solid rgba(11,61,110,0.08);
+      padding: 1.5rem 1.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .dest-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--or);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+
+    .dest-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(11,61,110,0.1);
+    }
+
+    .dest-card:hover::before { transform: scaleX(1); }
+
+    .dest-flag {
+      font-size: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .dest-city {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--bleu);
+      margin-bottom: 0.2rem;
+    }
+
+    .dest-country {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .dest-price-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .dest-price {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--or);
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: var(--bleu);
+      padding: 5rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 1px solid rgba(79,163,209,0.1);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .contact .section-label { color: var(--or-clair); }
+    .contact .section-title { color: var(--blanc); }
+    .contact .section-desc { color: rgba(248,251,255,0.5); }
+
+    .contact-number {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      color: var(--blanc);
+      margin: 1.5rem 0 0.5rem;
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-number span { color: var(--or); }
+
+    .contact-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-call {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--or);
+      color: var(--bleu);
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 2px;
+      transition: background 0.3s, transform 0.2s;
+      width: 260px;
+      justify-content: center;
+    }
+
+    .btn-call:hover {
+      background: var(--or-clair);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #25d366;
+      color: #fff;
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 2px;
+      transition: background 0.3s, transform 0.2s;
+      width: 260px;
+      justify-content: center;
+    }
+
+    .btn-whatsapp:hover {
+      background: #20ba58;
+      transform: translateY(-2px);
+    }
+
+    .contact-info {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: rgba(248,251,255,0.4);
+      letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #061e38;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.68rem;
+      color: rgba(248,251,255,0.3);
+      letter-spacing: 0.1em;
+    }
+
+    footer span { color: var(--or-clair); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50%       { opacity: 0.8; transform: scale(1.5); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 400px) {
+      .destinations-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="hero-circle"></div>
+    <div class="star">✦</div>
+    <div class="star">✦</div>
+    <div class="star">✦</div>
+    <div class="star">✦</div>
+    <div class="star">✦</div>
+    <div class="star">✦</div>
+
+    <div class="hero-badge">✈️ Agence de voyage — Cotonou</div>
+    <h1 class="hero-title">
+      Horizon<br/>
+      <span>Voyages</span>
+    </h1>
+    <p class="hero-tagline">Explorez le monde avec confiance. Des destinations de rêve, des prix accessibles, un service personnalisé.</p>
+    <a href="#destinations" class="hero-cta">🌍 Voir nos destinations</a>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">Destinations</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">200+</span>
+        <span class="stat-label">Voyageurs</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">5★</span>
+        <span class="stat-label">Satisfaction</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTINATIONS -->
+  <section class="destinations" id="destinations">
+    <p class="section-label">Nos offres</p>
+    <h2 class="section-title">Destinations</h2>
+    <p class="section-desc">Des voyages organisés depuis Cotonou vers les plus belles destinations du monde.</p>
+
+    <div class="destinations-grid">
+      <div class="dest-card">
+        <span class="dest-flag">🇫🇷</span>
+        <div class="dest-city">Paris</div>
+        <div class="dest-country">France</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">450 000 F</div>
+      </div>
+      <div class="dest-card">
+        <span class="dest-flag">🇦🇪</span>
+        <div class="dest-city">Dubai</div>
+        <div class="dest-country">Émirats Arabes</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">380 000 F</div>
+      </div>
+      <div class="dest-card">
+        <span class="dest-flag">🇹🇷</span>
+        <div class="dest-city">Istanbul</div>
+        <div class="dest-country">Turquie</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">320 000 F</div>
+      </div>
+      <div class="dest-card">
+        <span class="dest-flag">🇨🇮</span>
+        <div class="dest-city">Abidjan</div>
+        <div class="dest-country">Côte d'Ivoire</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">85 000 F</div>
+      </div>
+      <div class="dest-card">
+        <span class="dest-flag">🇸🇳</span>
+        <div class="dest-city">Dakar</div>
+        <div class="dest-country">Sénégal</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">75 000 F</div>
+      </div>
+      <div class="dest-card">
+        <span class="dest-flag">🇲🇦</span>
+        <div class="dest-city">Marrakech</div>
+        <div class="dest-country">Maroc</div>
+        <div class="dest-price-label">À partir de</div>
+        <div class="dest-price">180 000 F</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact">
+    <p class="section-label">Réservez votre voyage</p>
+    <h2 class="section-title">Contactez-nous</h2>
+    <p class="section-desc">Notre équipe est disponible pour vous aider à planifier votre voyage de rêve.</p>
+    <div class="contact-number"><span>+229</span> 96 55 44 33</div>
+    <div class="contact-buttons">
+      <a href="tel:+22996554433" class="btn-call">📞 Appeler maintenant</a>
+      <a href="https://wa.me/22996554433" class="btn-whatsapp">💬 WhatsApp</a>
+    </div>
+    <p class="contact-info">Disponible tous les jours · Cotonou, Bénin</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 <span>Horizon Voyages</span> · Tous droits réservés · Site réalisé par <span>Sylva Worou</span>
+  </footer>
+
+</body>
+</html>
